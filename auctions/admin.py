@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
             'fields': (
                 'title','description','start_time','end_time',
                 'starting_price','current_price','seller_id',
-                'winner_id',
+                'winner_id', 'status'
            )
         }),
     )

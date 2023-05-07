@@ -36,6 +36,7 @@ class User(AbstractUser):
         max_digits=10,
         decimal_places=2,
         default=0,
+        blank=True,
     )
 
     def __str__(self):

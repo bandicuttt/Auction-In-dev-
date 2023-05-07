@@ -10,7 +10,7 @@ class UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email',)}),
         (_('Личная информация'),
-         {'fields': ('first_name', 'last_name',)}),
+         {'fields': ('first_name', 'last_name','username')}),
         (_('Permissions'), {
             'fields': ('is_verification', 'is_staff',  'is_superuser', 'groups', 'user_permissions',),
         }),
@@ -19,7 +19,7 @@ class UserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1','username'),
+            'fields': ('email', 'password1','password2','username','first_name','last_name'),
         }),
     )
     list_display = ('id', 'email','first_name','last_name','username',

@@ -57,7 +57,10 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'api.errors_handler.errors_responses.custom_exception_handler',
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',),
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication','rest_framework.authentication.BasicAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',),
 
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
@@ -160,13 +163,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Wallet',
-        'DESCRIPTION': 'PixelCardWallet',
+        'DESCRIPTION': 'Wallet',
     'VERSION': '1.0.0',
     
     'SERVE_PERMISSIONS': [
         'rest_framework.permissions.AllowAny',
     ],
     'SERVE_AUTHENTICATION': [
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
     'SWAGGER_UI_SETTINGS': {

@@ -2,6 +2,7 @@ from django.db import models
 from users.models.users import User
 
 class Auction(models.Model):
+
     title=models.CharField(
         max_length=20,
         blank=False,
@@ -58,9 +59,11 @@ class Auction(models.Model):
 
 
 class AuctionImage(models.Model):
+    
     auction=models.ForeignKey(
         Auction,
         on_delete=models.CASCADE,
+        related_name='images'
     )
     image = models.ImageField(
         upload_to='auction_images/'
