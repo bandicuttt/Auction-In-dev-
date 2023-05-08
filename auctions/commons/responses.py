@@ -59,11 +59,10 @@ class AuctionResponses:
             }
         }
     
-    def delete_auction_success():
-        return Response({
+    def invalid_json_data():
+        return {
             'message': {
-                'info':'success',
-                'status': 'auction deleted',
+                'info':'error',
+                'status': 'You have provided invalid data',
             }
-        },status=status.HTTP_205_RESET_CONTENT)
-
+        }

@@ -1,15 +1,16 @@
 import datetime
 import pytz
 from rest_framework import serializers
-from rest_framework.response import Response
-from auctions.commons.baseserializers import BaseAuctionSerializer
+from auctions.commons.baseserializers import BaseAuctionImageSerializer, BaseAuctionSerializer
 from auctions.commons.responses import AuctionResponses
 
 from auctions.models.auctions import Auction, AuctionImage
-from users.models.users import User
 
 
 class RetrieverAuctionSerializer(BaseAuctionSerializer):
+   pass
+
+class ListAuctionSerializer(BaseAuctionImageSerializer):
    pass
 
 class UpdateAuctionSerializer(BaseAuctionSerializer):
@@ -40,39 +41,29 @@ class UpdateAuctionSerializer(BaseAuctionSerializer):
             return instance   
       raise serializers.ValidationError(AuctionResponses.no_permissions())
 
-class CreateAuctionSerializer(BaseAuctionSerializer):
+
+class CreateAuctionSerializer(BaseAuctionImageSerializer):
 
    def validate(self, validated_data):
-      starting_price = validated_data.get('starting_price')
-      start_time = validated_data.get('start_time')
+      starting_price = validated_data.get('auction').get('starting_price')
+      start_time = validated_data.get('auction').get('start_time')
 
       if start_time < datetime.datetime.now(tz=pytz.utc):
          raise serializers.ValidationError(AuctionResponses.invalid_start_time())
 
       if starting_price < 0:
          raise serializers.ValidationError(AuctionResponses.invalid_starting_price())
-      
+
       return validated_data
 
    def create(self, validated_data):
       request = self.context.get('request')
+      auction_data = validated_data.pop('auction')
+      image = validated_data.pop('image')
       seller = request.user
 
-      auction = Auction.objects.create(
-         title=validated_data.get('title'),
-         description=validated_data.get('description'),
-         start_time=validated_data.get('start_time'),
-         starting_price=validated_data.get('starting_price'),
-         seller_id=seller,
-      )
-      auction.save()
-      return auction
+      auction = Auction.objects.create(seller_id=seller, **auction_data)
+      auction_image = AuctionImage.objects.create(auction=auction,image=image,)
 
-
-class ListAuctionSerializer(BaseAuctionSerializer):
-
-   auction = RetrieverAuctionSerializer()
-
-   class Meta:
-      model = AuctionImage
-      fields = '__all__'
+      auction_image.save()
+      return auction_image

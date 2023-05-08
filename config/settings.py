@@ -18,6 +18,13 @@ ALLOWED_HOSTS = env.str('ALLOWED_HOSTS', default='').split(' ')
 
 # Application definition
 
+# NESTED_FORM_PARSER = {
+#     'OPTIONS': {
+#         'allow_empty': False,
+#         'allow_blank': True
+#     }
+# }
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -25,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_nested_forms',
     'rest_framework',
     'drf_spectacular',
     'corsheaders',
@@ -65,6 +73,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
+        'drf_nested_forms.parsers.NestedMultiPartParser',
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FileUploadParser',
     ),
