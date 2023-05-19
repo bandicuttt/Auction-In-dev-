@@ -96,3 +96,18 @@ class AuctionResponses:
                 'status': 'you are not logged in',
             }
         }
+    
+
+class WSAuctionResponses:
+
+    def success_connect_to_auction(auction):
+        return {
+            'message': {
+                'info': 'success',
+                'status': 'success connection',
+                'data': {
+                    'auctionId': auction.id,
+                    'title': auction.auction.title,
+                }
+            }
+        }

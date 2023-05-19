@@ -9,5 +9,5 @@ def get_auction(auction_id: int):
 
     auction_data = AuctionImage.objects.get(auction=auction)
 
-    if auction_data.auction.status == True:
+    if auction_data.auction.status:
         return auction_data

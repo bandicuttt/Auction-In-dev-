@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'users',
     'auctions',
+    'websockets'
 ]
 
 AUTH_USER_MODEL='users.User'
