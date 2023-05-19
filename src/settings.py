@@ -12,6 +12,8 @@ environ.Env.read_env(env.str(root(), '.env'))
 BASE_DIR = root()
 
 
+HTTP_HEADER_ENCODING = 'utf-8'
+
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=True)
 ALLOWED_HOSTS = env.str('ALLOWED_HOSTS', default='').split(' ')

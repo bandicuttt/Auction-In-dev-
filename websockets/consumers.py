@@ -1,5 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from websockets.helpers import get_auction
+
+from websockets.helpers import get_authenticated_user
+from websockets.queries import get_auction
 
 
 class BaseConsumer(AsyncWebsocketConsumer):
@@ -15,8 +17,12 @@ class BaseConsumer(AsyncWebsocketConsumer):
             self.connection_name
         )
 
-        get_auction(self.connection_name)
-        return await self.accept()
+        if not await get_authenticated_user(self):
+            return await self.close(code=403)
+            
+        if await get_auction(self.connection_name):
+            return await self.accept()
+        return await self.close(code=403)
 
     async def disconnect(self, close_code: int):
         """
