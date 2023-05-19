@@ -1,7 +1,9 @@
-from django.urls import path, include
 from users.views.users import CreateUserViewSet, LoginAPIView, SendEmailConfirmationView
+
+from django.urls import path
 from knox.views import LogoutView, LogoutAllView
 from rest_framework.routers import DefaultRouter
+
 
 router = DefaultRouter()
 router.register(r'create-user', CreateUserViewSet,'create-user')

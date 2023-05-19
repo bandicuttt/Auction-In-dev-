@@ -1,7 +1,29 @@
 from rest_framework.response import Response
 from rest_framework import status
 
+
+class UserResponses:
+
+    def success_login(data):
+        return Response({
+            'message': {
+                'info':'success',
+                'status': 'successful authorization',
+                'data': data
+            }
+        },status=status.HTTP_200_OK)
+    
+    def error_login(data):
+        return Response({
+            'message': {
+                'info':'error',
+                'status': 'provided invalid data',
+                'data': data
+            }
+        },status=status.HTTP_200_OK)
+
 class AuctionResponses:
+    
     def get_auction_success(data):
         return Response({
             'message': {
@@ -15,7 +37,7 @@ class AuctionResponses:
         return {
             'message': {
                 'info': 'error',
-                'status': 'Provided invalid starting price',
+                'status': 'provided invalid starting price',
             }
         }
     
@@ -23,7 +45,7 @@ class AuctionResponses:
         return {
             'message': {
                 'info': 'error',
-                'status': 'Provided invalid start time',
+                'status': 'provided invalid start time',
             }
         }
     
@@ -31,7 +53,7 @@ class AuctionResponses:
         return Response({
             'message': {
                 'info':'error',
-                'status': 'Auction ID is not provided',
+                'status': 'auction ID is not provided',
             }
         },status=status.HTTP_400_BAD_REQUEST)
     
@@ -49,13 +71,13 @@ class AuctionResponses:
             return Response({
                 'message': {
                     'info':'error',
-                    'status': 'You have not permissions to do this action',
+                    'status': 'you have not permissions to do this action',
                 }
             }, status=status.HTTP_403_FORBIDDEN)
         return {
             'message': {
                 'info':'error',
-                'status': 'You have not permissions to do this action',
+                'status': 'you have not permissions to do this action',
             }
         }
     
@@ -63,6 +85,14 @@ class AuctionResponses:
         return {
             'message': {
                 'info':'error',
-                'status': 'You have provided invalid data',
+                'status': 'you have provided invalid data',
+            }
+        }
+    
+    def anon_user():
+         return {
+            'message': {
+                'info':'error',
+                'status': 'you are not logged in',
             }
         }

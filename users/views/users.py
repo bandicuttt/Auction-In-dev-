@@ -1,23 +1,26 @@
 import uuid
-from rest_framework.permissions import AllowAny
+from auctions.commons.responses import UserResponses
+
 from users.serializers.users import CreateUserSerializer, LoginSerializer
 from users.models.users import User
+from users.tasks import account_activate, send_email_confirmation
+
 from knox import views as knox_views
-from django.contrib.auth import login
 from rest_framework.response import Response
 from rest_framework import mixins, viewsets, status
+from rest_framework.permissions import AllowAny
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from django.conf import settings
-from users.tasks import account_activate, send_email_confirmation
+from django.contrib.auth import login
 from drf_spectacular.utils import extend_schema_view, extend_schema,\
 OpenApiResponse, OpenApiParameter,OpenApiTypes
+
 
 @extend_schema_view(
     create=extend_schema(
     summary='Регистрация пользователя',
     tags=['users'],
-    responses={201:OpenApiResponse(response=CreateUserSerializer)}
     )
 )
 class CreateUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -25,10 +28,12 @@ class CreateUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = CreateUserSerializer
     permission_classes = (AllowAny,)
 
+
 @extend_schema_view(
     post=extend_schema(summary='Авторизация пользователя', tags=['users']),
 )
 class LoginAPIView(knox_views.LoginView):
+
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
@@ -41,8 +46,8 @@ class LoginAPIView(knox_views.LoginView):
             token = response.data.get('token')
             response.set_cookie(key='Autorization', value=f'Token {token}')
         else:
-            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(response.data, status=status.HTTP_200_OK)
+            return UserResponses.error_login(serializer.errors)
+        return UserResponses.success_login(response.data)
     
 @extend_schema_view(
     create=extend_schema(
@@ -73,6 +78,7 @@ class LoginAPIView(knox_views.LoginView):
         )
 )
 class SendEmailConfirmationView(viewsets.ViewSet, knox_views.LoginView):
+
     permission_classes = (AllowAny,)
     http_method_names = ('get','post',)
 

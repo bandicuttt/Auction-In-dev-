@@ -16,15 +16,6 @@ SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=True)
 ALLOWED_HOSTS = env.str('ALLOWED_HOSTS', default='').split(' ')
 
-# Application definition
-
-# NESTED_FORM_PARSER = {
-#     'OPTIONS': {
-#         'allow_empty': False,
-#         'allow_blank': True
-#     }
-# }
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +28,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'knox',
+    'channels',
 ]
 
 # apps
@@ -59,7 +51,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'src.urls'
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'api.errors_handler.errors_responses.custom_exception_handler',
@@ -104,7 +96,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+# WSGI_APPLICATION = 'src.wsgi.application'
+ASGI_APPLICATION = 'src.asgi.application'
 
 
 # Database
@@ -171,8 +164,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Wallet',
-        'DESCRIPTION': 'Wallet',
+    'TITLE': 'Auction',
+        'DESCRIPTION': 'Auction',
     'VERSION': '1.0.0',
     
     'SERVE_PERMISSIONS': [
@@ -207,18 +200,22 @@ CSRF_COOKIE_SECURE = False
 
 # cache
 REDIS_HOST = env.str('REDIS_HOST','redis')
+REDIS_PORT = env.int('REDIS_PORT',6379)
+REDIS_CACHE_DB = env.str('REDIS_DB','1')
+REDIS_CELERY_DB = env.str('REDIS_CELERY_DB','0')
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://{REDIS_HOST}:6379',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}',
         'OPTIONS': {
-            'db':'1',
+            'db': REDIS_CACHE_DB,
         }
     }
 }
 
 # celery
-CELERY_BROKER_URL = f'redis://{REDIS_HOST}:6379/0'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:6379/{REDIS_CELERY_DB}'
 
 # email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -230,3 +227,13 @@ EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL', '')
 EMAIL_REDIRECT_DOMAIN = env.str('EMAIL_REDIRECT_DOMAIN','')
+
+# layers
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [f"redis://{REDIS_HOST}:{REDIS_PORT}/2"],
+        },
+    },
+}

@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+
 from auctions.models.auctions import Auction, AuctionImage
 
 
 @admin.register(Auction)
 class UserAdmin(admin.ModelAdmin):
+
     fieldsets = (
         ('Auction Data', {
             'fields': (
@@ -20,8 +22,10 @@ class UserAdmin(admin.ModelAdmin):
     list_display_links = ('id',)
     ordering = ('-id',)
 
+
 @admin.register(AuctionImage)
 class UserAdmin(admin.ModelAdmin):
+    
     fieldsets = (
         ('Auction Image Data', {
             'fields': (

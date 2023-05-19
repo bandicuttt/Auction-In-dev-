@@ -1,6 +1,7 @@
 from django.db import models
 from users.models.users import User
 
+
 class Auction(models.Model):
 
     title=models.CharField(

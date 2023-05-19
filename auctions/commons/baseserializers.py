@@ -1,11 +1,14 @@
 from rest_framework import serializers
+
 from auctions.models.auctions import Auction, AuctionImage
+
 
 class BaseAuctionSerializer(serializers.ModelSerializer):
 
    class Meta:
       model = Auction
       fields = (
+         'id',
          'title',
          'description',
          'start_time',
